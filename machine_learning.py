@@ -27,6 +27,13 @@ def load_data():
     # Nettoyage des valeurs vides :
     data.TotalCharges = data.TotalCharges.replace(" ",0).astype('float')
 
+    # Renommage des variables avec des espaces dans les noms (pour pouvoir utiliser les memes noms dans l'API)
+    data = data.rename(columns = {"PaymentMethod_Bank transfer (automatic)": "PaymentMethod_Bank_transfer",
+                                  "PaymentMethod_Credit card (automatic)":"PaymentMethod_Credit_card",
+                                  "PaymentMethod_Mailed check":"PaymentMethod_Mailed_check",
+                                  "PaymentMethod_Electronic check":"PaymentMethod_Electronic_check",
+                                  "InternetService_Fiber optic": "InternetService_Fiber_optic"})
+
     #colonne 'customerID' devient l'index du dataset
     data = data.set_index('customerID')
     return data
