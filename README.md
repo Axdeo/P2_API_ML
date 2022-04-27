@@ -11,7 +11,11 @@ L'objectif de ce projet est de déployer un modèle de Machine Learning. Attenti
 
 ###L'API
 - On va dans un premier construire une API avec Flask ou FastAPI.
-- Cette API devra permettre d'interroger les différents modèles.
+- Cette API devra permettre d'interroger les différents modèles. Routes disponibles :
+* / : Message welcome
+* /status : Test de connexion
+* /models : Liste des noms des différents modeles disponibles
+* /models/{model_name}/prediction : Prediction à partir d'un des modèles référencés au point précédent
 - Les utilisateurs pourront aussi interroger l'API pour accéder aux performances de l'algorithme sur les jeux de tests.
 - Enfin il faut permettre aux utilisateurs d'utiliser une identification basique. (On pourra utiliser le header Authentication et encoder username:password en base 64).
 - On pourra utiliser la liste d'utilisateurs/mots de passe suivante:
@@ -22,6 +26,11 @@ L'objectif de ce projet est de déployer un modèle de Machine Learning. Attenti
 
 ###Le container
 Il s'agira ici de créer un container Docker pour déployer facilement l'API. On portera une attention particulière aux librairies Python à installer ainsi qu'à leurs différentes versions.
+Commandes pour construire le container docker dans le répertoire racine : 
+* docker build -t api_churn .
+* docker container run -d -p 80:80 --name churn api_churn
+* swagger disponible sur : http://127.0.0.1/docs
+* API disponible sur : http://127.0.0.1/
 
 ###Les tests
 Une série de tests devra être créée pour tester l'API conteneurisée. On pourra pour cela créer un fichier docker-compose.yml en s'inspirant de ce qui a été fait dans l'évaluation de Docker.

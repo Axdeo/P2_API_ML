@@ -28,7 +28,7 @@ tags=[  {'name': 'home', 'description': 'basic functions'},
 
 
 # instanciation de l'API
-api = FastAPI ( title='API Churn' , description='API requests prediction of churn',
+app = FastAPI (title='API Churn', description='API requests prediction of churn',
                version = '1.0.1', openapi_tags=tags
                )
 
@@ -99,26 +99,26 @@ def get_performances(model):
 # TODO : rajouter l'authentification sur toutes les routes
 
 # Route / : Accueil.
-@api.get('/',name='Welcome',tags=['home'])
+@app.get('/', name='Welcome', tags=['home'])
 def get_index():
    """return greetings
    """
    return {'greetings':"Welcome in the API churn's prediction - you must have an account to interogate the API"}
 
 # Route /status : Vérifier que l'API est bien fonctionnelle.
-@api.get('/status', name="Connexion test", tags=['home'])
+@app.get('/status', name="Connexion test", tags=['home'])
 def get_status():
     # TODO : authentification
     return 1
   
 # Route /models : Renvoi les modèles étudiés et disponibles
-@api.get('/models', name = 'Models')
+@app.get('/models', name ='Models')
 def get_models():
     """ return all the models that you can request"""
     return {'models':models
             }
 # note karine : transformé de get en post (on ne peut pas envoyer un body à un get)
-@api.post('/models/{model_name}/prediction', tags=['predictions'])
+@app.post('/models/{model_name}/prediction', tags=['predictions'])
 def post_model_prediction( c: Customer, model_name: str ):
     if model_name not in models:
         raise HTTPException(status_code=404,
@@ -127,7 +127,7 @@ def post_model_prediction( c: Customer, model_name: str ):
         return get_predictions(c,model_name)
 
 # note karine : transformé de get en post (on ne peut pas envoyer un body à un get)
-@api.post('/models/{model_name}/performances', tags=['performances'])
+@app.post('/models/{model_name}/performances', tags=['performances'])
 def post_model_performance(model_name: str):
     if model_name not in models:
         raise HTTPException(status_code=404,
