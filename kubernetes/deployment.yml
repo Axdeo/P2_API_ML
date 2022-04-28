@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-churn
+  labels:
+    app: api-churn
+spec:
+  selector:
+    matchLabels:
+      app: api-churn
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api-churn
+    spec:
+      containers:
+        - name: api
+          image: krineparra/api_churn:latest
+          ports:
+            - containerPort: 8000

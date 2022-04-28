@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-api-churn
+spec:
+  defaultBackend:
+    service:
+      name: svc-api-churn
+      port:
+        number: 8000
