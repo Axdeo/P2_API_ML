@@ -28,16 +28,32 @@ L'objectif de ce projet est de déployer un modèle de Machine Learning. Attenti
 Il s'agira ici de créer un container Docker pour déployer facilement l'API. On portera une attention particulière aux librairies Python à installer ainsi qu'à leurs différentes versions.
 Commandes pour construire le container docker dans le répertoire racine : 
 * docker build -t api_churn .
+Commandes pour lancer l'API en local : 
 * docker container run -d -p 80:80 --name churn api_churn
 * swagger disponible sur : http://127.0.0.1/docs
 * API disponible sur : http://127.0.0.1/
+Commandes pour ajouter l'API sur github :
+* docker login --username krineparra --password ...
+* docker tag api_churn krineparra/api_churn
+* docker image push krineparra/api_churn:latest
+* penser à redémarrer le deploiement kubernetes s'il tourne déjà pour prendre en compte les modifications de l'API
+
 
 ###Les tests
 Une série de tests devra être créée pour tester l'API conteneurisée. On pourra pour cela créer un fichier docker-compose.yml en s'inspirant de ce qui a été fait dans l'évaluation de Docker.
 
 ###Kubernetes
 On pourra enfin créer un fichier de déploiement ainsi qu'un Service et un Ingress avec Kubernetes pour permettre le déploiement de l'API sur au moins 3 Pods.
-Les Livrables
+Commandes pour construire le deploiement k8s : 
+* minikube addons enable ingress
+* kubectl create -f deployment.yml
+* kubectl create -f service.yml
+* kubectl create -f ingress.yml
+* pour récupérer l'adresse IP de l'ingress : kubectl get ingress
+* ssh -fNL 8000:192.168.49.2:80
+* API disponible sur : localhost:8000/docs 
+
+###Les Livrables
 Les attendus sont un fichier pdf contenant des précisions sur les fichiers, sur les différentes étapes ainsi que sur les choix effectués. On devra aussi rendre un repo Github sur lequel seront les fichiers suivants:
 fichier source de l'API
 Dockerfile de l'API
