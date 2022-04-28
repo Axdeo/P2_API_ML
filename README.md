@@ -21,9 +21,11 @@ Routes disponibles :
 * /status : Test de connexion
 * /models : Liste des noms des différents modeles disponibles
 * /models/{model_name}/prediction : Prediction à partir d'un des modèles référencés au point précédent
-- Les utilisateurs pourront aussi interroger l'API pour accéder aux performances de l'algorithme sur les jeux de tests.
-- Enfin il faut permettre aux utilisateurs d'utiliser une identification basique. (On pourra utiliser le header Authentication et encoder username:password en base 64).
-- On pourra utiliser la liste d'utilisateurs/mots de passe suivante:
+Les utilisateurs pourront aussi interroger l'API pour accéder aux performances de l'algorithme sur les jeux de tests.
+
+Enfin il faut permettre aux utilisateurs d'utiliser une identification basique. (On pourra utiliser le header Authentication et encoder username:password en base 64).
+
+On pourra utiliser la liste d'utilisateurs/mots de passe suivante:
   - alice: wonderland
   - bob: builder
   - clementine: mandarine
