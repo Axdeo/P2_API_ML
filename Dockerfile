@@ -1,4 +1,16 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
-RUN pip3 install joblib pandas sklearn
-COPY ./app /app
+FROM amancevice/pandas
+
+COPY requirements.txt .
+COPY main.py .
+COPY features.json .
+COPY model_knn.joblib .
+COPY model_linear.joblib .
+COPY model_logistic.joblib .
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8000
+
+CMD uvicorn main:app --host 0.0.0.0 --port 8000
+
 
