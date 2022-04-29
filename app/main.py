@@ -2,15 +2,15 @@ import joblib
 import json
 
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import asyncio
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
 
 # todo lib au dessus à rajouter dans requirement.txt puis dans le dockerfile
+# todo : rajouter la documentation et la gestion des exceptions
 models=['LogisticRegression',
                   'KNN',
                   'SVR'
@@ -28,7 +28,7 @@ tags=[  {'name': 'home', 'description': 'basic functions'},
 
 
 # instanciation de l'API
-api = FastAPI ( title='API Churn' , description='API requests prediction of churn',
+app = FastAPI (title='API Churn', description='API requests prediction of churn',
                version = '1.0.1', openapi_tags=tags
                )
 
@@ -80,11 +80,12 @@ def get_predictions(customer , model):
       prediction = model_knn.predict(data)[0]
       probability = model_knn.predict_proba(data)
     elif model == 'SVR':
-      prediction = model_knn.linear(data)[0]
-      probability = model_knn.linear_proba(data)
+      # note karine : pour SVR il va falloir enrigistrer le scaler dans un joblig et scaler les données
+      prediction = model_linear.predict(data)[0]
+      probability = model_linear.predict_proba(data)  # KO pour LinearSVC, la methode n'existe pas. trouver la methode correspondante
     elif model == 'LogisticRegression':
-      prediction = model_knn.logistic(data)[0]
-      probability = model_knn.logistic_proba(data)
+      prediction = model_logistic.predict(data)[0]
+      probability = model_logistic.predict_proba(data)
       
     return  {'prediction' : int(prediction),
              'probability' : str(round(probability[0][0]*100,2)) + "%"
@@ -92,48 +93,47 @@ def get_predictions(customer , model):
 
 def get_performances(model): 
   #TODO: recup via les joblib des perfs
+  pass
 
 # définitions des différentes routes
 # TODO : rajouter l'authentification sur toutes les routes
 
 # Route / : Accueil.
-@api.get('/',name='Welcome',tags=['home'])
+@app.get('/', name='Welcome', tags=['home'])
 def get_index():
    """return greetings
    """
    return {'greetings':"Welcome in the API churn's prediction - you must have an account to interogate the API"}
 
 # Route /status : Vérifier que l'API est bien fonctionnelle.
-@api.get('/status', name="Connexion test", tags=['home'])
+@app.get('/status', name="Connexion test", tags=['home'])
 def get_status():
     # TODO : authentification
     return 1
   
 # Route /models : Renvoi les modèles étudiés et disponibles
-@api.get('/models', name = 'Models')
+@app.get('/models', name ='Models')
 def get_models():
     """ return all the models that you can request"""
     return {'models':models
             }
-  
-@api.get('models/{model_name}/prediction', tags=['predictions'])
-def get_model_prediction( c = Customer, m = model_name: str):
+# note karine : transformé de get en post (on ne peut pas envoyer un body à un get)
+@app.post('/models/{model_name}/prediction', tags=['predictions'])
+def post_model_prediction( c: Customer, model_name: str ):
     if model_name not in models:
-       raise HTTPException(
-         status_code=404,
-         detail='This model is not available, see "/models" for  more informations'
+        raise HTTPException(status_code=404,
+                            detail='This model is not available, see "/models" for  more informations')
     else:
-         return get_predictions(c,m)
-         
+        return get_predictions(c,model_name)
 
-@api.get('models/{model_name}/performances', tags=['performances'])
-def get_model_performance(m = model_name):
-     if model_name not in models:
-       raise HTTPException(
-         status_code=404,
-         detail='This model is not available, see "/models" for  more informations'
+# note karine : transformé de get en post (on ne peut pas envoyer un body à un get)
+@app.post('/models/{model_name}/performances', tags=['performances'])
+def post_model_performance(model_name: str):
+    if model_name not in models:
+        raise HTTPException(status_code=404,
+                            detail='This model is not available, see "/models" for  more informations')
     else:
-         return get_performances(m)
+        return get_performances(model_name)
     
     
 
