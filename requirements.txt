@@ -5,4 +5,4 @@ uvicorn
 pandas
 asyncio
 sklearn
-
+passlib

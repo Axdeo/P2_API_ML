@@ -4,7 +4,6 @@ COPY requirements.txt .
 COPY main.py .
 COPY features.json .
 COPY model_knn.joblib .
-COPY model_linear.joblib .
 COPY model_logistic.joblib .
 
 RUN pip install -r requirements.txt
