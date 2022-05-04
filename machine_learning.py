@@ -3,8 +3,6 @@ from sklearn.linear_model import LogisticRegression
 import json
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
 
 def load_data():
     """
@@ -40,9 +38,8 @@ def load_data():
 
 def save_models():
     """
-    Instancie plusieurs modèles :
+    Instancie les modèles :
     - LogisticRegression
-    - LinearSVC
     - KNN
     Entraine ces modèles
     Sauvegarde les modèles dans joblib
@@ -59,14 +56,6 @@ def save_models():
     model_logistic.fit(X,y)
     with open('model_logistic.joblib', 'wb') as f:
         joblib.dump(model_logistic, f)
-
-    # - LinearSVC :
-    scaler = StandardScaler()
-    Xs = scaler.fit(X).transform(X)
-    model_linear = LinearSVC(random_state=0)
-    model_linear.fit(Xs,y)
-    with open('model_linear.joblib', 'wb') as f:
-        joblib.dump(model_linear, f)
 
     # - KNN :
     model_knn = KNeighborsClassifier(17)
