@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  api:
+    image: krineparra/api_churn:latest
+    container_name: api_churn_container
+    networks:
+      - my_network_from_compose
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: curl --fail -s http://localhost:8000/ || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  authentication_test:
+    image: api_auth_test:latest
+    container_name: api_auth_test
+    networks:
+      - my_network_from_compose
+    volumes:
+      - .:/home/test
+    depends_on:
+       api:
+         condition: service_healthy
+  authorization_test:
+    image: api_autho_test:latest
+    container_name: api_autho_test
+    networks:
+      - my_network_from_compose
+    volumes:
+      - .:/home/test
+    depends_on:
+       api:
+         condition: service_healthy
+  prediction_test:
+    image: api_pred_test:latest
+    container_name: api_pred_test
+    networks:
+      - my_network_from_compose
+    volumes:
+      - .:/home/test
+    depends_on:
+       api:
+         condition: service_healthy
+
+networks:
+  my_network_from_compose:
